@@ -152,7 +152,7 @@ program main
 
   enddo
 
-  print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local !, " R: ", minval(r_array), " ", maxval(r_array)
+  print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, " R: ", minval(r_array), " ", maxval(r_array)
   
   call sum_all_all_cr(nglob_local, nglob_total)
   call sum_all_all_cr(nspec_local, nspec_total)
