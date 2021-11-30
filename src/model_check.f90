@@ -136,7 +136,7 @@ program main
 
           r = sqrt(x**2 + y**2 + z**2)
 
-          if (r > 1-2890.0/6731.0) then
+          if (r > 0) then
             checkarray(i,j,k,ispec) = 1.0
           endif
         
@@ -145,11 +145,14 @@ program main
     enddo
     if ( ANY(checkarray(:,:,:,ispec)==1.0) ) then
       nspec_local = nspec_local + 1
-      nglob_local = nglob_local + sum(checkarray(:,:,:,ispec))
+      nglob_local = nglob_local + real(NGLLX) * real(NGLLY) * real(NGLLZ) 
     endif
 
   enddo
 
+  print*, myrank, " Local elements:   ", nspec_local
+  print*, myrank, " Local elements:   ", nglob_local
+  
   call sum_all_all_cr(nglob_local, nglob_total)
   call sum_all_all_cr(nspec_local, nspec_total)
 
