@@ -90,8 +90,9 @@ program main
 
   character(len=500) :: solver_file
 
-  integer :: ier
+  integer :: ier, i, j, k, ispec, any
   real(kind=CUSTOM_REAL) :: threshold, nglob_total, nspec_total, nglob_local, nspec_local
+  real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray 
 
   call init_mpi()
 
@@ -120,6 +121,7 @@ program main
   threshold = 800.0
 
   do ispec = 1, NSPEC
+
     do k = 1, NGLLZ
       do j = 1, NGLLY
         do i = 1, NGLLX
@@ -127,19 +129,30 @@ program main
           x = x_glob(iglob)
           y = y_glob(iglob)
           z = z_glob(iglob)
-          
+
+          r = sqrt(x**2 + y**2 + z**2)
+
+          if (r > 1-800.0/6731.0) then
+            checkarray(i,j,k,ispec) = 1.0
+          endif
+        
         enddo
       enddo
     enddo
+    if ( ANY(checkarray(:,:,:,ispec)==1.0) ) then
+      nspec_local = nspec_local + 1
+      nglob_local = nglob_local + sum(checkarray(:,:,:,ispec)==1.0)
+    endif
+
   enddo
 
   call sum_all_all_cr(nglob_local, nglob_total)
   call sum_all_all_cr(nspec_local, nspec_total)
 
 
-
-  if(myrank == 0) print*, "Write perturb model file"
-  call write_bp_file(perturb_model, perturb_names, "KERNELS_GROUP", outputfn)
+  if(myrank == 0) print*, "Total elements:   ", nspec_total
+  if(myrank == 0) print*, "Total GLL points: ", nglob_total
+  ! call write_bp_file(perturb_model, perturb_names, "KERNELS_GROUP", outputfn)
 
   call adios_finalize(myrank, ier)
   call MPI_FINALIZE(ier)
