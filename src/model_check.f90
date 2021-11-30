@@ -138,7 +138,6 @@ program main
           z = z_glob(iglob)
 
           r = sqrt(x**2 + y**2 + z**2)
-          rarray(iglob) = 1.0*r
 
           if (r > 0.9) then
             checkarray(i,j,k,ispec) = 1.0
