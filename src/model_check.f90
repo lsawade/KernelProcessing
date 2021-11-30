@@ -83,16 +83,19 @@ program main
 
   use mpi
   use adios_read_mod
-  use global_var, only : CUSTOM_REAL, NGLLX, NGLLY, NGLLZ, NSPEC, myrank, init_mpi
+  use global_var, only : CUSTOM_REAL, NGLLX, NGLLY, NGLLZ, NSPEC, NGLOB, myrank, init_mpi
   use AdiosIO
   use perturb_subs
   implicit none
 
   character(len=500) :: solver_file
 
-  integer :: ier, i, j, k, ispec, iglob
+  integer :: ier, i, j, k, ispec, iglob, ibool
   real(kind=CUSTOM_REAL) :: threshold, nglob_total, nspec_total, nglob_local, nspec_local
   real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray 
+  integer, dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: ibool
+  real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
+  
   real(kind=CUSTOM_REAL) :: x,y,z,r
 
   call init_mpi()
