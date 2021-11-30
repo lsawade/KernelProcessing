@@ -97,6 +97,7 @@ program main
   real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
 
   real(kind=CUSTOM_REAL) :: x,y,z,r
+  real(kind=CUSTOM_REAL), dimension(NGLOB) :: r_array
 
   call init_mpi()
 
@@ -135,6 +136,7 @@ program main
           z = z_glob(iglob)
 
           r = sqrt(x**2 + y**2 + z**2)
+          r_array(iglob) = r
 
           if (r > 0.9) then
             checkarray(i,j,k,ispec) = 1.0
@@ -150,8 +152,7 @@ program main
 
   enddo
 
-  print*, myrank, " Local elements:   ", nspec_local
-  print*, myrank, " Local GLL:   ", nglob_local
+  print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, "R: ", min(r_array), " ", max(r_array)
   
   call sum_all_all_cr(nglob_local, nglob_total)
   call sum_all_all_cr(nspec_local, nspec_total)
