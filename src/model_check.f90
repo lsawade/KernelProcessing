@@ -97,7 +97,7 @@ program main
   real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
 
   real(kind=CUSTOM_REAL) :: x,y,z,r
-  real(kind=CUSTOM_REAL), dimension(NGLOB) :: rarray
+  real(kind=CUSTOM_REAL) :: rmin, rmax
 
   call init_mpi()
 
@@ -125,6 +125,8 @@ program main
   nspec_local = 0.0
   threshold = 800.0
 
+  rmin = 99999999999.0
+  rmax = -99999999999.0
   do ispec = 1, NSPEC
 
     do k = 1, NGLLZ
@@ -141,7 +143,15 @@ program main
           if (r > 0.9) then
             checkarray(i,j,k,ispec) = 1.0
           endif
-        
+
+          if (r > rmax) then
+            rmax = r
+          endif
+
+          if (r < rmin) then
+            rmin = r
+          endif
+
         enddo
       enddo
     enddo
@@ -152,7 +162,7 @@ program main
 
   enddo
 
-  print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, " R: ", minval(rarray), " ", maxval(rarray)
+  print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, " R: ", rmin, " ", rmax
   
   call sum_all_all_cr(nglob_local, nglob_total)
   call sum_all_all_cr(nspec_local, nspec_total)
