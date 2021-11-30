@@ -90,12 +90,12 @@ program main
 
   character(len=500) :: solver_file
 
-  integer :: ier, i, j, k, ispec, iglob, ibool
+  integer :: ier, i, j, k, ispec, iglob
   real(kind=CUSTOM_REAL) :: threshold, nglob_total, nspec_total, nglob_local, nspec_local
   real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray 
   integer, dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: ibool
   real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
-  
+
   real(kind=CUSTOM_REAL) :: x,y,z,r
 
   call init_mpi()
@@ -145,7 +145,7 @@ program main
     enddo
     if ( ANY(checkarray(:,:,:,ispec)==1.0) ) then
       nspec_local = nspec_local + 1
-      nglob_local = nglob_local + sum(checkarray(:,:,:,ispec)==1.0)
+      nglob_local = nglob_local + sum(checkarray(:,:,:,ispec))
     endif
 
   enddo
