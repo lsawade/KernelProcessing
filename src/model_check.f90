@@ -136,7 +136,7 @@ program main
 
           r = sqrt(x**2 + y**2 + z**2)
 
-          if (r > 1-800.0/6731.0) then
+          if (r > 1-2890.0/6731.0) then
             checkarray(i,j,k,ispec) = 1.0
           endif
         
