@@ -86,6 +86,7 @@ program main
   use global_var, only : CUSTOM_REAL, NGLLX, NGLLY, NGLLZ, NSPEC, NGLOB, myrank, init_mpi
   use AdiosIO
   use perturb_subs
+  use sum_all_all_cr
   implicit none
 
   character(len=500) :: solver_file
