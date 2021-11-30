@@ -6,7 +6,7 @@ FC=gfortran
 MPIFC=mpif90
 #MPIFC=ftn
 
-FCFLAGS=-O3 -Wall -J $(OBJDIR) -I $(OBJDIR)
+FCFLAGS=-O3 -Wall -J $(OBJDIR) -I $(OBJDIR) -g
 
 adios_link=$(shell adios_config -lf)
 adios_inc=$(shell adios_config -cf)
