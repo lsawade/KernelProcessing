@@ -29,12 +29,12 @@ module perturb_subs
 
     call getarg(1, solver_file)
 
-    if trim(solver_file) == '' then
+    if (trim(solver_file) == '') then
       call exit_mpi('Usage: xmodel_check /path/to/solver_data.bp')
     endif
 
     if (myrank == 0) then
-      print*, "Solver file: ", trim(ref_model_file)
+      print*, "Solver file: ", trim(solver_file)
     
     endif
   end subroutine get_sys_args
