@@ -83,10 +83,9 @@ program main
 
   use mpi
   use adios_read_mod
-  use global_var, only : CUSTOM_REAL, NGLLX, NGLLY, NGLLZ, NSPEC, NGLOB, myrank, init_mpi
+  use global_var, only : CUSTOM_REAL, NGLLX, NGLLY, NGLLZ, NSPEC, NGLOB, myrank, init_mpi, sum_all_all_cr
   use AdiosIO
   use perturb_subs
-  use sum_all_all_cr
   implicit none
 
   character(len=500) :: solver_file
