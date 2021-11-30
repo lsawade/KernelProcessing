@@ -139,7 +139,7 @@ program main
 
           r = sqrt(x**2 + y**2 + z**2)
 
-          if (r > 0.9) then
+          if (r > 0.0) then
             checkarray(i,j,k,ispec) = 1.0
           endif
 
