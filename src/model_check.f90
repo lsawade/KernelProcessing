@@ -97,7 +97,7 @@ program main
   real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
 
   real(kind=CUSTOM_REAL) :: x,y,z,r
-  real(kind=CUSTOM_REAL), dimension(NGLOB) :: r_array
+  real(kind=CUSTOM_REAL), dimension(NGLOB) :: rarray
 
   call init_mpi()
 
@@ -136,7 +136,7 @@ program main
           z = z_glob(iglob)
 
           r = sqrt(x**2 + y**2 + z**2)
-          r_array(iglob) = 1.0*r
+          rarray(iglob) = 1.0*r
 
           if (r > 0.9) then
             checkarray(i,j,k,ispec) = 1.0
