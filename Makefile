@@ -27,6 +27,7 @@ all: $(BINDIR)/xsteepDescent \
 	$(BINDIR)/xmerge_kernels \
 	$(BINDIR)/xmerge_azi_kernels \
 	$(BINDIR)/xupdate_model \
+	$(BINDIR)/xmodel_check \
 	$(BINDIR)/xmodel_perturb_ref \
 	$(BINDIR)/xblend_model \
 	$(BINDIR)/xgauss_single \
@@ -106,6 +107,9 @@ $(OBJDIR)/update_model.o: $(SRCDIR)/update_model.f90  $(objects)
 $(OBJDIR)/model_perturb_ref.o: $(SRCDIR)/model_perturb_ref.f90  $(objects)
 	$(MPIFC) $(FCFLAGS) -c $< -o $@ $(adios_inc)
 
+$(OBJDIR)/model_check.o: $(SRCDIR)/model_check.f90  $(objects)
+	$(MPIFC) $(FCFLAGS) -c $< -o $@ $(adios_inc)
+
 $(OBJDIR)/blend_model.o: $(SRCDIR)/blend_model.f90 $(objects)
 	$(MPIFC) $(FCFLAGS) -c $< -o $@ $(adios_inc)
 
@@ -177,6 +181,9 @@ $(BINDIR)/xlbfgs: $(OBJDIR)/lbfgs.o $(OBJDIR)/lbfgs_subs.o $(objects)
 	$(MPIFC) $(FCFLAGS) -o $@ $^ $(adios_link) $(adios_inc)
 
 $(BINDIR)/xupdate_model: $(OBJDIR)/update_model.o $(objects)
+	$(MPIFC) $(FCFLAGS) -o $@ $^ $(adios_link) $(adios_inc)
+
+$(BINDIR)/xmodel_check: $(OBJDIR)/model_check.o $(objects)
 	$(MPIFC) $(FCFLAGS) -o $@ $^ $(adios_link) $(adios_inc)
 
 $(BINDIR)/xmodel_perturb_ref: $(OBJDIR)/model_perturb_ref.o $(objects)
