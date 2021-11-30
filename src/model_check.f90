@@ -90,9 +90,10 @@ program main
 
   character(len=500) :: solver_file
 
-  integer :: ier, i, j, k, ispec, any
+  integer :: ier, i, j, k, ispec, iglob
   real(kind=CUSTOM_REAL) :: threshold, nglob_total, nspec_total, nglob_local, nspec_local
   real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray 
+  real(kind=CUSTOM_REAL) :: x,y,z,r
 
   call init_mpi()
 
