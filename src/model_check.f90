@@ -92,11 +92,12 @@ program main
 
   integer :: ier, i, j, k, ispec, iglob
   real(kind=CUSTOM_REAL) :: threshold, nglob_total, nspec_total, nglob_local, nspec_local
-  real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray 
+  real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: checkarray
+  real(kind=CUSTOM_REAL), dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: radii
   integer, dimension(NGLLX, NGLLY, NGLLZ, NSPEC) :: ibool
   real(kind=CUSTOM_REAL), dimension(NGLOB) :: x_glob, y_glob, z_glob
 
-  real(kind=CUSTOM_REAL) :: x,y,z,r
+  real(kind=CUSTOM_REAL) :: x,y,z
   real(kind=CUSTOM_REAL) :: rmin, rmax
 
   call init_mpi()
@@ -120,13 +121,13 @@ program main
   call read_bp_file_real(solver_file, "reg1/y_global", y_glob)
   call read_bp_file_real(solver_file, "reg1/z_global", z_glob)
 
-  perturb_model(:,:,:,:,1:6) = log(new_model / ref_model)
   nglob_local = 0.0
   nspec_local = 0.0
-  threshold = 800.0
+  threshold = 100.0
 
-  rmin = 99999999999.0
-  rmax = -99999999999.0
+  radii(:,:,:,:) = 0.0
+  rmin = 0.0
+  rmax = 0.0
   do ispec = 1, NSPEC
 
     do k = 1, NGLLZ
@@ -137,18 +138,10 @@ program main
           y = y_glob(iglob)
           z = z_glob(iglob)
 
-          r = sqrt(x**2 + y**2 + z**2)
-
-          if (r > 1-(660.0/6371.0) ) then
+          radii(i,j,k,ispec) = sqrt(x**2 + y**2 + z**2)
+          
+          if (radii(i,j,k,ispec) > 1-(threshold/6371.0) ) then
             checkarray(i,j,k,ispec) = 1.0
-          endif
-
-          if (r > rmax) then
-            rmax = r
-          endif
-
-          if (r < rmin) then
-            rmin = r
           endif
 
         enddo
@@ -159,8 +152,11 @@ program main
       nglob_local = nglob_local + real(NGLLX) * real(NGLLY) * real(NGLLZ) 
     endif
 
-  enddo
-
+ enddo
+ 
+  rmax = maxval(radii)
+  rmin = minval(radii)
+  
   print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, " R: ", rmin, " ", rmax
   
   call sum_all_all_cr(nglob_local, nglob_total)
@@ -169,7 +165,6 @@ program main
 
   if(myrank == 0) print*, "Total elements:   ", nspec_total
   if(myrank == 0) print*, "Total GLL points: ", nglob_total
-  ! call write_bp_file(perturb_model, perturb_names, "KERNELS_GROUP", outputfn)
 
   call adios_finalize(myrank, ier)
   call MPI_FINALIZE(ier)
