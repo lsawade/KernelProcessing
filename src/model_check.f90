@@ -116,14 +116,22 @@ program main
   ! if(myrank == 0) print*, "Done reading"
 
   ! call read_bp_file_int(input_solver_file, "reg1/idoubling", idoubling)
+
+  ! Region 1
   call read_bp_file_int(solver_file, "reg1/ibool", ibool)
   call read_bp_file_real(solver_file, "reg1/x_global", x_glob)
   call read_bp_file_real(solver_file, "reg1/y_global", y_glob)
   call read_bp_file_real(solver_file, "reg1/z_global", z_glob)
 
+  ! Region 2
+  ! call read_bp_file_int(solver_file, "reg2/ibool", ibool)
+  ! call read_bp_file_real(solver_file, "reg2/x_global", x_glob)
+  ! call read_bp_file_real(solver_file, "reg2/y_global", y_glob)
+  ! call read_bp_file_real(solver_file, "reg2/z_global", z_glob)
+  
   nglob_local = 0.0
   nspec_local = 0.0
-  threshold = 100.0
+  threshold = 3000.0
 
   radii(:,:,:,:) = 0.0
   rmin = 0.0
@@ -154,8 +162,8 @@ program main
 
  enddo
  
-  rmax = maxval(radii)
-  rmin = minval(radii)
+  rmax = maxval(radii) * 6371
+  rmin = minval(radii) * 6371
   
   print*, myrank, " Local elements: ", nspec_local, " GLL: ", nglob_local, " R: ", rmin, " ", rmax
   
